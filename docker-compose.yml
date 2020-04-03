@@ -1,0 +1,28 @@
+version: '3'
+services:
+  cli:
+    image: nestjs/cli
+    volumes:
+      - ./:/workspace
+    tty: true
+  node:
+    image: node:${NODE_VERSION}
+    working_dir: /home/node/app
+    command: npm config set registry https://registry.npm.taobao.org
+    command: npm install
+    command: npm run start
+    volumes:
+      - ./app:/home/node/app
+    ports:
+      - ${APP_PORT}:${LISTEN_PORT}
+  database:
+    image: postgres:9.6
+    restart: always
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
