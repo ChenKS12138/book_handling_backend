@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
-import 'reflect-metadata';
 import { Admin } from './entities/admin.entity';
 import { Book } from './entities/book.entity';
 import { Comment } from './entities/comment.entity';

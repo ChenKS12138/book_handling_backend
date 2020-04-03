@@ -24,9 +24,18 @@ export class CommentService {
   ) {}
   async getComment(getCommentDto: GetCommentDto) {
     const { id } = getCommentDto;
-    const book = await this.bookRepository.find({ where: { id } });
-    const comments = await this.commentRepository.find({ where: { book } });
-    return success({ comments });
+    const book = await this.bookRepository.findOne({ where: { id } });
+    const comments = await this.commentRepository.find({
+      where: { book },
+      relations: ['user'],
+    });
+    const filteredComments = comments.map(comment => {
+      const { user, ...rest } = comment;
+      const { name, studentId, email, id } = user;
+      const newUser = { name, studentId, email, id };
+      return { user: newUser, ...rest };
+    });
+    return success({ comments: filteredComments });
   }
   async commentBook(commentBookDto: CommentBookDto, userId: number) {
     const { id, text } = commentBookDto;

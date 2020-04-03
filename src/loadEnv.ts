@@ -1,4 +1,4 @@
-import {config} from 'dotenv';
+import { config } from 'dotenv';
 import * as path from 'path';
 
-config({ path: path.join(__dirname, '../.bookHandling.env')})
+config({ path: path.resolve('./.bookHandling.env') });

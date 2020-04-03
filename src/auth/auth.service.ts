@@ -31,11 +31,11 @@ export class AuthService {
     });
   }
   async adminLogin(loginDto: LoginDto) {
+    const { email, password } = loginDto;
     // 临时的硬编码后面再改，数据迁移太麻烦了
     const ROOT_EMAIL = 'root@bh.com';
     const ROOT_NAME = 'root';
     const ROOT_PASSWORD = 'root';
-    const { email, password } = loginDto;
     if (email === ROOT_EMAIL && password === ROOT_PASSWORD) {
       return {
         bearToken: this.jwtService.sign({

@@ -15,8 +15,14 @@ export class AdminService {
     private readonly recordRepository: Repository<Record>,
   ) {}
   async getRecord() {
-    const allRecord = this.recordRepository.find();
-    return success(allRecord);
+    const allRecord = await this.recordRepository.find({ relations: ['user'] });
+    const filteredRecords = allRecord.map(record => {
+      const { user, ...rest } = record;
+      const { studentId, name, id, email } = user;
+      const newUser = { studentId, name, id, email };
+      return { user: newUser, ...rest };
+    });
+    return success({ records: filteredRecords });
   }
   async addBook(addBookDto: AddBookDto) {
     const { author, bookName, totalCount } = addBookDto;

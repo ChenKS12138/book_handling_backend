@@ -21,17 +21,19 @@ export class BookService {
     const books = await this.bookRepository.find({
       select: ['id', 'name', 'author', 'totalCount', 'createAt', 'updateAt'],
     });
-    const booksWithStatus = books.map(async book => {
-      const [
-        releventLendRecords,
-        lendingCount,
-      ] = await this.recordRepository.findAndCount({
-        where: { book, statusCode: RECORD_STATUS.LEND },
-      });
-      return { lendingCount, ...Book };
-    });
+    const booksWithStatus = await Promise.all(
+      books.map(async book => {
+        const [
+          releventLendRecords,
+          lendingCount,
+        ] = await this.recordRepository.findAndCount({
+          where: { book, statusCode: RECORD_STATUS.LEND },
+        });
+        return { lendingCount, ...book };
+      }),
+    );
 
-    return success(booksWithStatus);
+    return success({ books: booksWithStatus });
   }
   async borrow(borrowDto: BorrowDto, userId: number) {
     const { id: bookId } = borrowDto;

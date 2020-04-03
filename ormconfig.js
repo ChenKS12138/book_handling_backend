@@ -1,6 +1,6 @@
 const { config } = require('dotenv');
 const path = require('path');
-config(path.resolve('./.bookHandling.env'));
+config({ path: path.resolve('./.bookHandling.env') });
 const DatabaseConfig = {
   type: 'postgres',
   host: '127.0.0.1',
